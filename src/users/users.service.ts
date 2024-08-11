@@ -1,8 +1,10 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 // import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { plainToInstance } from 'class-transformer';
+import { GetUserDto } from './dto/get-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -19,15 +21,25 @@ export class UsersService {
     const user = await this.prisma.user.create({
       data: createUserDto,
     });
-    delete user.password;
-    return user;
+    return plainToInstance(GetUserDto, user);
   }
 
-  findAll() {
-    return this.prisma.user.findMany();
+  async findAll() {
+    const users = await this.prisma.user.findMany();
+    return plainToInstance(GetUserDto, users);
   }
 
-  findOne(name: string) {
+  async findOne(id: number) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: id,
+      },
+    });
+    if (!user) throw new NotFoundException('user it not found');
+    return plainToInstance(GetUserDto, user);
+  }
+
+  findOneByName(name: string) {
     return this.prisma.user.findFirst({
       where: {
         name: name,

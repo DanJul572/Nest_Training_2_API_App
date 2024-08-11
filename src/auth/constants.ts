@@ -5,5 +5,5 @@ export const jwtConstants = {
 export const jwtTokenConfigs = {
   global: true,
   secret: jwtConstants.secret,
-  signOptions: { expiresIn: '60s' },
+  signOptions: { expiresIn: '5m' },
 };
