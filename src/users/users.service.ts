@@ -35,7 +35,7 @@ export class UsersService {
         id: id,
       },
     });
-    if (!user) throw new NotFoundException('user it not found');
+    if (!user) throw new NotFoundException('user not found');
     return plainToInstance(GetUserDto, user);
   }
 
@@ -57,6 +57,6 @@ export class UsersService {
         id: id,
       },
     });
-    return 'User removed';
+    return 'user has been deleted';
   }
 }
